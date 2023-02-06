@@ -9,13 +9,18 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET','POST'])
 @login_required
 def home():
+    a = str(current_user)
     if request.method == 'POST':
         note = request.form.get('note')
 
         if len(note) < 1:
             flash('Note is too short!', category='error')
         else:
-            new_note = Note(data=note, user_id=current_user)
+            new_note = Note(
+                data=note, 
+                user_id=a
+                #user_id=current_user
+                )
             db.session.add(new_note)
             db.session.commit()
             flash('Note added', category='success')
@@ -32,5 +37,6 @@ def delete_note():
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
-            return jsonify({})
+           
+    return jsonify({})
 
