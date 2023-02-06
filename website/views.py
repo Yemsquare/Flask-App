@@ -9,7 +9,7 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET','POST'])
 @login_required
 def home():
-    a = str(current_user)
+    #a = str(current_user)
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -18,7 +18,7 @@ def home():
         else:
             new_note = Note(
                 data=note, 
-                user_id=a
+                user_id=str(current_user)
                 #user_id=current_user
                 )
             db.session.add(new_note)
@@ -31,12 +31,12 @@ def home():
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
     note = json.loads(request.data)
-    noteId = note['note']
+    noteId = note['noteId']
     note = Note.query.get(noteId)
     if note:
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
            
-    return jsonify({})
+            return jsonify({})
 
